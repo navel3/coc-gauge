@@ -9,7 +9,6 @@ import {
   ServerOptions,
   LanguageClientOptions,
   services,
-  OutputChannel,
 } from 'coc.nvim';
 import DemoList from './lists';
 import { spawn, ChildProcessWithoutNullStreams } from 'child_process';
@@ -74,6 +73,38 @@ export async function activate(context: ExtensionContext): Promise<void> {
     commands.registerCommand('coc-gauge.Stop', async () => {
       if (gaugeProc) {
         gaugeProc.kill();
+      }
+    }),
+
+    commands.registerCommand('coc-gauge.RenameStep', async () => {
+      const { document, position: pos } = await workspace.getCurrentState();
+      const line = await workspace.getLine(document.uri, pos.line);
+      if (!line.match(/^(?:[*])([^*].*)$/)) return;
+
+      // Find the end of the step
+      const lines = [line.trim()];
+      for (;;) {
+        const nline = await workspace.getLine(document.uri, pos.line + 1);
+
+        // check the next line is continuation of the step or not
+        if (nline.length === 0 || ['#', '*', ' ', '\t'].includes(nline[0])) {
+          // end of the step
+          break;
+        }
+        lines.push(nline);
+        pos.line += 1;
+      }
+
+      // https://github.com/neoclide/coc.nvim/blob/c8f0c2ee355d141d3c13021d926a6e9a255010a9/src/handler/index.ts#L472
+      const curname = lines.join(' ');
+      const newName = await workspace.callAsync<string>('input', ['New name: ', curname]);
+      workspace.nvim.command('normal! :<C-u>', true);
+      if (!newName) {
+        workspace.showMessage('Empty name, canceled', 'warning');
+        return;
+      }
+      if (newName !== curname) {
+        workspace.callAsync('CocAction', ['rename', newName]);
       }
     }),
 
