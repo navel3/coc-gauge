@@ -8,10 +8,12 @@ import {
   LanguageClient,
   ServerOptions,
   LanguageClientOptions,
+  languages,
   services,
 } from 'coc.nvim';
 import DemoList from './lists';
 import { spawn, ChildProcessWithoutNullStreams } from 'child_process';
+import ReferenceProvider from './referenceProvider';
 
 export async function activate(context: ExtensionContext): Promise<void> {
   const serverOptions: ServerOptions = {
@@ -25,6 +27,8 @@ export async function activate(context: ExtensionContext): Promise<void> {
   };
 
   const client = new LanguageClient('gauge', 'gauge', serverOptions, clientOptions);
+
+  languages.registerReferencesProvider(['javascript'], new ReferenceProvider(client));
 
   const gaugeChannel = workspace.createOutputChannel('Gauge');
 
@@ -48,9 +52,6 @@ export async function activate(context: ExtensionContext): Promise<void> {
     });
     gaugeProc.stderr.on('data', (e) => {
       gaugeChannel.append(e.message);
-    });
-    gaugeProc.on('close', (code) => {
-      gaugeChannel.appendLine(`Closed: ${code}`);
     });
     gaugeProc.on('exit', (code) => {
       gaugeChannel.appendLine(`Exited: ${code}`);
