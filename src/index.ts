@@ -1,9 +1,6 @@
 import {
   commands,
-  CompleteResult,
   ExtensionContext,
-  listManager,
-  sources,
   workspace,
   LanguageClient,
   ServerOptions,
@@ -11,7 +8,6 @@ import {
   languages,
   services,
 } from 'coc.nvim';
-import DemoList from './lists';
 import { spawn, ChildProcessWithoutNullStreams } from 'child_process';
 import ReferenceProvider from './referenceProvider';
 
@@ -21,7 +17,6 @@ export async function activate(context: ExtensionContext): Promise<void> {
     args: ['daemon', '--lsp', '--dir', '.'],
   };
 
-  // TODO: More precise selector
   const clientOptions: LanguageClientOptions = {
     documentSelector: ['spec'],
   };
@@ -107,49 +102,6 @@ export async function activate(context: ExtensionContext): Promise<void> {
       if (newName !== curname) {
         workspace.callAsync('CocAction', ['rename', newName]);
       }
-    }),
-
-    listManager.registerList(new DemoList(workspace.nvim)),
-
-    sources.createSource({
-      name: 'coc-gauge completion source', // unique id
-      shortcut: '[CS]', // [CS] is custom source
-      priority: 1,
-      triggerPatterns: [], // RegExp pattern
-      doComplete: async () => {
-        const items = await getCompletionItems();
-        return items;
-      },
-    }),
-
-    workspace.registerKeymap(
-      ['n'],
-      'coc-gauge-keymap',
-      async () => {
-        workspace.showMessage(`registerKeymap`);
-      },
-      { sync: false }
-    ),
-
-    workspace.registerAutocmd({
-      event: 'InsertLeave',
-      request: true,
-      callback: () => {
-        workspace.showMessage(`registerAutocmd on InsertLeave`);
-      },
     })
   );
-}
-
-async function getCompletionItems(): Promise<CompleteResult> {
-  return {
-    items: [
-      {
-        word: 'TestCompletionItem 1',
-      },
-      {
-        word: 'TestCompletionItem 2',
-      },
-    ],
-  };
 }
