@@ -37,7 +37,7 @@ export class StopCommand {
 }
 
 export class RenameStepCommand {
-  public readonly id = 'coc-gauge.Stop';
+  public readonly id = 'coc-gauge.RenameStep';
   constructor() {}
 
   async execute() {
@@ -51,7 +51,8 @@ export class RenameStepCommand {
       const nline = await workspace.getLine(document.uri, pos.line + 1);
 
       // check the next line is continuation of the step or not
-      if (nline.length === 0 || ['#', '*', ' ', '\t'].includes(nline[0])) {
+      const trimmed = nline.trim();
+      if (trimmed.trim().length === 0 || ['#', '*', '|'].includes(trimmed[0])) {
         // end of the step
         break;
       }
