@@ -9,7 +9,7 @@ import {
   CancellationToken,
 } from 'vscode-languageserver-protocol';
 
-export default class GaugeReferenceProvider implements ReferenceProvider {
+export class GaugeReferenceProvider implements ReferenceProvider {
   public constructor(private readonly client: LanguageClient) {}
 
   public async provideReferences(
