@@ -27,6 +27,25 @@ export class RunSpecCommand {
   }
 }
 
+export class DebugScenarioOnCursorCommand {
+  public readonly id = 'coc-gauge.DebugScenarioOnCursor';
+  constructor(private runner: GaugeRunner) {}
+
+  async execute() {
+    const state = await workspace.getCurrentState();
+    this.runner.run({ specFile: getCurrentFileName(), line: state.position.line, debug: true });
+  }
+}
+
+export class DebugSpecCommand {
+  public readonly id = 'coc-gauge.DebugSpec';
+  constructor(private runner: GaugeRunner) {}
+
+  async execute() {
+    this.runner.run({ specFile: getCurrentFileName(), debug: true });
+  }
+}
+
 export class StopCommand {
   public readonly id = 'coc-gauge.Stop';
   constructor(private runner: GaugeRunner) {}

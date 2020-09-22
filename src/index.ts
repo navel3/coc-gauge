@@ -11,7 +11,14 @@ import {
 import { GaugeReferenceProvider } from './referenceProvider';
 import { GaugeRunner } from './run';
 import { Command } from 'coc.nvim/lib/commands';
-import { RunScenarioOnCursorCommand, RunSpecCommand, StopCommand, RenameStepCommand } from './commands';
+import {
+  RunScenarioOnCursorCommand,
+  RunSpecCommand,
+  StopCommand,
+  RenameStepCommand,
+  DebugScenarioOnCursorCommand,
+  DebugSpecCommand,
+} from './commands';
 
 const startGaugeLsp = (projectDir: string) => {
   const serverOptions: ServerOptions = {
@@ -34,7 +41,9 @@ export async function activate(context: ExtensionContext): Promise<void> {
 
   const channelName = 'Gauge';
   const outputChannel = workspace.createOutputChannel(channelName);
-  await workspace.nvim.command(`au BufWinEnter output:///${channelName} set syntax=markdown`);
+  await workspace.nvim.command(
+    `au BufWinEnter output:///${channelName} set syntax=markdown | setlocal nospell nofoldenable nowrap noswapfile buftype=nofile bufhidden=hide`
+  );
   const runner = new GaugeRunner(outputChannel);
 
   function registCommand(cmd: Command): void {
@@ -44,6 +53,8 @@ export async function activate(context: ExtensionContext): Promise<void> {
 
   registCommand(new RunScenarioOnCursorCommand(runner));
   registCommand(new RunSpecCommand(runner));
+  registCommand(new DebugScenarioOnCursorCommand(runner));
+  registCommand(new DebugSpecCommand(runner));
   registCommand(new StopCommand(runner));
   registCommand(new RenameStepCommand());
 }
