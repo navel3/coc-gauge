@@ -69,9 +69,9 @@ export class GaugeRunner {
   }
 
   // https://github.com/getgauge/gauge-vscode/blob/8c227a2071aed643b017eb579c0f83e2eccbf309/src/execution/gaugeExecutor.ts#L87
-  private filterStdoutDataDumpsToTextLines(callback) {
+  private filterStdoutDataDumpsToTextLines(callback: any) {
     let acc = '';
-    return (data) => {
+    return (data: any) => {
       const splitted = data.toString().split(/\r?\n/);
       const lines = splitted.slice(0, splitted.length - 1);
       if (lines.length > 0) {
@@ -79,7 +79,7 @@ export class GaugeRunner {
         acc = '';
       }
       acc = `${acc}${splitted[splitted.length - 1]}`;
-      lines.forEach((line) => callback(`${line}\n`));
+      lines.forEach((line: string) => callback(`${line}\n`));
     };
   }
 }
