@@ -1,4 +1,4 @@
-import { GaugeRunner, RunProps } from './run';
+import { GaugeRunner, RunOption } from './run';
 import { workspace } from 'coc.nvim';
 
 const getCurrentFileName = () => workspace.uri.replace(/^file:\/\/\//, '/');
@@ -8,12 +8,12 @@ export interface Command {
   execute(...args: any[]): void | Promise<any>;
 }
 
-let lastLaunchedOption: RunProps;
+let lastLaunchedOption: RunOption;
 
 abstract class RunGaugeCommandBase {
   constructor(public readonly id: string, private runner: GaugeRunner) {}
 
-  protected async run(option: RunProps) {
+  protected async run(option: RunOption) {
     lastLaunchedOption = option;
     this.runner.run(option);
   }

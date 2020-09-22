@@ -1,7 +1,7 @@
 import { OutputChannel, workspace } from 'coc.nvim';
 import { ChildProcessWithoutNullStreams, spawn } from 'child_process';
 
-export interface RunProps {
+export interface RunOption {
   specFile?: string;
   line?: number;
   debug?: boolean;
@@ -11,7 +11,7 @@ export class GaugeRunner {
   private proc: ChildProcessWithoutNullStreams | undefined;
   constructor(private channel: OutputChannel) {}
 
-  async run({ specFile, line, debug }: RunProps = {}) {
+  async run({ specFile, line, debug }: RunOption = {}) {
     this.channel.clear();
     this.channel.show(true);
 
