@@ -20,14 +20,15 @@ import {
   DebugSpecCommand,
   RunLastLaunchedCommand,
   DebugLastLaunchedCommand,
+  RestartGaugeServiceCommand,
 } from './commands';
 import config from './config';
+import { spawn } from 'child_process';
+import { getWorkspaceFolderPath } from './util';
 
-const startGaugeLsp = (projectDir: string) => {
-  const serverOptions: ServerOptions = {
-    command: 'gauge',
-    args: ['daemon', '--lsp', '--dir', projectDir],
-  };
+const startGaugeService = () => {
+  const serverOptions: ServerOptions = async () =>
+    spawn('gauge', ['daemon', '--lsp', '--dir', getWorkspaceFolderPath()]);
 
   const clientOptions: LanguageClientOptions = {
     documentSelector: ['spec'],
@@ -39,8 +40,7 @@ const startGaugeLsp = (projectDir: string) => {
 export async function activate(context: ExtensionContext): Promise<void> {
   if (!config.enable) return;
 
-  // TODO: init on first spec file is opened
-  const client = startGaugeLsp('.');
+  const client = startGaugeService();
   languages.registerReferencesProvider(['javascript'], new GaugeReferenceProvider(client));
   context.subscriptions.push(services.registLanguageClient(client));
 
@@ -64,4 +64,5 @@ export async function activate(context: ExtensionContext): Promise<void> {
   registCommand(new DebugLastLaunchedCommand(runner));
   registCommand(new StopCommand(runner));
   registCommand(new RenameStepCommand());
+  registCommand(new RestartGaugeServiceCommand(client));
 }

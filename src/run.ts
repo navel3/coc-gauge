@@ -1,6 +1,7 @@
 import { OutputChannel, workspace } from 'coc.nvim';
 import { ChildProcessWithoutNullStreams, spawn } from 'child_process';
 import config from './config';
+import { getWorkspaceFolderPath } from './util';
 
 export interface RunOption {
   specFile?: string;
@@ -37,7 +38,7 @@ export class GaugeRunner {
       args.push(`${specFile}${line ? ':' + line.toString() : ''}`);
     }
     this.proc = spawn('gauge', args, {
-      //cwd: TODO
+      cwd: getWorkspaceFolderPath(),
       env,
     });
     this.proc.stdout.on(

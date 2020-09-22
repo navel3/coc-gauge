@@ -43,10 +43,12 @@
     "*"
   ],
   "contributes": {
-    "rootPatterns": {
-      "filetype": "spec",
-      "patterns": [ "manifest.json" ]
-    },
+    "rootPatterns": [
+      {
+        "filetype": "spec",
+        "patterns": [ "manifest.json" ]
+      }
+    ],
     "configuration": {
       "type": "object",
       "title": "coc-gauge configuration",

@@ -1,5 +1,5 @@
 import { GaugeRunner, RunOption } from './run';
-import { workspace } from 'coc.nvim';
+import { workspace, LanguageClient } from 'coc.nvim';
 
 const getCurrentFileName = () => workspace.uri.replace(/^file:\/\/\//, '/');
 
@@ -21,7 +21,7 @@ abstract class RunGaugeCommandBase {
 
 export class RunScenarioAtCursorCommand extends RunGaugeCommandBase {
   constructor(runner: GaugeRunner) {
-    super('coc-gauge.RunScenarioAtCursor', runner);
+    super('coc-gauge.runScenarioAtCursor', runner);
   }
 
   async execute() {
@@ -32,7 +32,7 @@ export class RunScenarioAtCursorCommand extends RunGaugeCommandBase {
 
 export class RunSpecCommand extends RunGaugeCommandBase {
   constructor(runner: GaugeRunner) {
-    super('coc-gauge.RunSpec', runner);
+    super('coc-gauge.runSpec', runner);
   }
 
   async execute() {
@@ -42,7 +42,7 @@ export class RunSpecCommand extends RunGaugeCommandBase {
 
 export class DebugScenarioAtCursorCommand extends RunGaugeCommandBase {
   constructor(runner: GaugeRunner) {
-    super('coc-gauge.DebugScenarioAtCursor', runner);
+    super('coc-gauge.debugScenarioAtCursor', runner);
   }
 
   async execute() {
@@ -53,7 +53,7 @@ export class DebugScenarioAtCursorCommand extends RunGaugeCommandBase {
 
 export class DebugSpecCommand extends RunGaugeCommandBase {
   constructor(runner: GaugeRunner) {
-    super('coc-gauge.DebugSpec', runner);
+    super('coc-gauge.debugSpec', runner);
   }
 
   async execute() {
@@ -63,7 +63,7 @@ export class DebugSpecCommand extends RunGaugeCommandBase {
 
 export class DebugLastLaunchedCommand extends RunGaugeCommandBase {
   constructor(runner: GaugeRunner) {
-    super('coc-gauge.DebugLastLaunched', runner);
+    super('coc-gauge.debugLastLaunched', runner);
   }
 
   async execute() {
@@ -73,7 +73,7 @@ export class DebugLastLaunchedCommand extends RunGaugeCommandBase {
 
 export class RunLastLaunchedCommand extends RunGaugeCommandBase {
   constructor(runner: GaugeRunner) {
-    super('coc-gauge.RunLastLaunched', runner);
+    super('coc-gauge.runLastLaunched', runner);
   }
 
   async execute() {
@@ -82,7 +82,7 @@ export class RunLastLaunchedCommand extends RunGaugeCommandBase {
 }
 
 export class StopCommand {
-  public readonly id = 'coc-gauge.Stop';
+  public readonly id = 'coc-gauge.stop';
   constructor(private runner: GaugeRunner) {}
 
   async execute() {
@@ -91,7 +91,7 @@ export class StopCommand {
 }
 
 export class RenameStepCommand {
-  public readonly id = 'coc-gauge.RenameStep';
+  public readonly id = 'coc-gauge.renameStep';
   constructor() {}
 
   async execute() {
@@ -125,5 +125,17 @@ export class RenameStepCommand {
     if (newName !== curname) {
       workspace.callAsync('CocAction', ['rename', newName]);
     }
+  }
+}
+
+export class RestartGaugeServiceCommand {
+  public readonly id = 'coc-gauge.restartGaugeService';
+  constructor(private client: LanguageClient) {}
+
+  async execute() {
+    this.client.stop().then(() => {
+      workspace.showMessage('Restarted Gauge Service');
+      this.client.restart();
+    });
   }
 }
