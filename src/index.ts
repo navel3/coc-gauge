@@ -12,11 +12,11 @@ import { GaugeReferenceProvider } from './referenceProvider';
 import { GaugeRunner } from './run';
 import { Command } from 'coc.nvim/lib/commands';
 import {
-  RunScenarioOnCursorCommand,
+  RunScenarioAtCursorCommand,
   RunSpecCommand,
   StopCommand,
   RenameStepCommand,
-  DebugScenarioOnCursorCommand,
+  DebugScenarioAtCursorCommand,
   DebugSpecCommand,
 } from './commands';
 
@@ -51,9 +51,9 @@ export async function activate(context: ExtensionContext): Promise<void> {
     context.subscriptions.push(commands.registerCommand(id as string, execute, cmd));
   }
 
-  registCommand(new RunScenarioOnCursorCommand(runner));
+  registCommand(new RunScenarioAtCursorCommand(runner));
   registCommand(new RunSpecCommand(runner));
-  registCommand(new DebugScenarioOnCursorCommand(runner));
+  registCommand(new DebugScenarioAtCursorCommand(runner));
   registCommand(new DebugSpecCommand(runner));
   registCommand(new StopCommand(runner));
   registCommand(new RenameStepCommand());

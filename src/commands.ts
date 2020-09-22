@@ -8,8 +8,8 @@ export interface Command {
   execute(...args: any[]): void | Promise<any>;
 }
 
-export class RunScenarioOnCursorCommand {
-  public readonly id = 'coc-gauge.RunScenarioOnCursor';
+export class RunScenarioAtCursorCommand {
+  public readonly id = 'coc-gauge.RunScenarioAtCursor';
   constructor(private runner: GaugeRunner) {}
 
   async execute() {
@@ -27,8 +27,8 @@ export class RunSpecCommand {
   }
 }
 
-export class DebugScenarioOnCursorCommand {
-  public readonly id = 'coc-gauge.DebugScenarioOnCursor';
+export class DebugScenarioAtCursorCommand {
+  public readonly id = 'coc-gauge.DebugScenarioAtCursor';
   constructor(private runner: GaugeRunner) {}
 
   async execute() {
