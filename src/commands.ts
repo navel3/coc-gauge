@@ -1,4 +1,4 @@
-import { GaugeRunner } from './run';
+import { GaugeRunner, RunProps } from './run';
 import { workspace } from 'coc.nvim';
 
 const getCurrentFileName = () => workspace.uri.replace(/^file:\/\/\//, '/');
@@ -8,41 +8,76 @@ export interface Command {
   execute(...args: any[]): void | Promise<any>;
 }
 
-export class RunScenarioAtCursorCommand {
-  public readonly id = 'coc-gauge.RunScenarioAtCursor';
-  constructor(private runner: GaugeRunner) {}
+let lastLaunchedOption: RunProps;
+
+abstract class RunGaugeCommandBase {
+  constructor(public readonly id: string, private runner: GaugeRunner) {}
+
+  protected async run(option: RunProps) {
+    lastLaunchedOption = option;
+    this.runner.run(option);
+  }
+}
+
+export class RunScenarioAtCursorCommand extends RunGaugeCommandBase {
+  constructor(runner: GaugeRunner) {
+    super('coc-gauge.RunScenarioAtCursor', runner);
+  }
 
   async execute() {
     const state = await workspace.getCurrentState();
-    this.runner.run({ specFile: getCurrentFileName(), line: state.position.line });
+    this.run({ specFile: getCurrentFileName(), line: state.position.line });
   }
 }
 
-export class RunSpecCommand {
-  public readonly id = 'coc-gauge.RunSpec';
-  constructor(private runner: GaugeRunner) {}
+export class RunSpecCommand extends RunGaugeCommandBase {
+  constructor(runner: GaugeRunner) {
+    super('coc-gauge.RunSpec', runner);
+  }
 
   async execute() {
-    this.runner.run({ specFile: getCurrentFileName() });
+    this.run({ specFile: getCurrentFileName() });
   }
 }
 
-export class DebugScenarioAtCursorCommand {
-  public readonly id = 'coc-gauge.DebugScenarioAtCursor';
-  constructor(private runner: GaugeRunner) {}
+export class DebugScenarioAtCursorCommand extends RunGaugeCommandBase {
+  constructor(runner: GaugeRunner) {
+    super('coc-gauge.DebugScenarioAtCursor', runner);
+  }
 
   async execute() {
     const state = await workspace.getCurrentState();
-    this.runner.run({ specFile: getCurrentFileName(), line: state.position.line, debug: true });
+    this.run({ specFile: getCurrentFileName(), line: state.position.line, debug: true });
   }
 }
 
-export class DebugSpecCommand {
-  public readonly id = 'coc-gauge.DebugSpec';
-  constructor(private runner: GaugeRunner) {}
+export class DebugSpecCommand extends RunGaugeCommandBase {
+  constructor(runner: GaugeRunner) {
+    super('coc-gauge.DebugSpec', runner);
+  }
 
   async execute() {
-    this.runner.run({ specFile: getCurrentFileName(), debug: true });
+    this.run({ specFile: getCurrentFileName(), debug: true });
+  }
+}
+
+export class DebugLastLaunchedCommand extends RunGaugeCommandBase {
+  constructor(runner: GaugeRunner) {
+    super('coc-gauge.DebugLastLaunched', runner);
+  }
+
+  async execute() {
+    return this.run({ ...lastLaunchedOption, debug: true });
+  }
+}
+
+export class RunLastLaunchedCommand extends RunGaugeCommandBase {
+  constructor(runner: GaugeRunner) {
+    super('coc-gauge.RunLastLaunched', runner);
+  }
+
+  async execute() {
+    this.run({ ...lastLaunchedOption, debug: false });
   }
 }
 

@@ -18,6 +18,8 @@ import {
   RenameStepCommand,
   DebugScenarioAtCursorCommand,
   DebugSpecCommand,
+  RunLastLaunchedCommand,
+  DebugLastLaunchedCommand,
 } from './commands';
 
 const startGaugeLsp = (projectDir: string) => {
@@ -53,8 +55,10 @@ export async function activate(context: ExtensionContext): Promise<void> {
 
   registCommand(new RunScenarioAtCursorCommand(runner));
   registCommand(new RunSpecCommand(runner));
+  registCommand(new RunLastLaunchedCommand(runner));
   registCommand(new DebugScenarioAtCursorCommand(runner));
   registCommand(new DebugSpecCommand(runner));
+  registCommand(new DebugLastLaunchedCommand(runner));
   registCommand(new StopCommand(runner));
   registCommand(new RenameStepCommand());
 }
