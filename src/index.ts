@@ -21,6 +21,7 @@ import {
   RunLastLaunchedCommand,
   DebugLastLaunchedCommand,
 } from './commands';
+import config from './config';
 
 const startGaugeLsp = (projectDir: string) => {
   const serverOptions: ServerOptions = {
@@ -36,6 +37,8 @@ const startGaugeLsp = (projectDir: string) => {
 };
 
 export async function activate(context: ExtensionContext): Promise<void> {
+  if (!config.enable) return;
+
   // TODO: init on first spec file is opened
   const client = startGaugeLsp('.');
   languages.registerReferencesProvider(['javascript'], new GaugeReferenceProvider(client));

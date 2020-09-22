@@ -43,6 +43,10 @@
     "*"
   ],
   "contributes": {
+    "rootPatterns": {
+      "filetype": "spec",
+      "patterns": [ "manifest.json" ]
+    },
     "configuration": {
       "type": "object",
       "title": "coc-gauge configuration",
@@ -51,6 +55,11 @@
           "type": "boolean",
           "default": true,
           "description": "Enable coc-gauge extension"
+        },
+        "coc-gauge.verbose": {
+          "type": "boolean",
+          "default": false,
+          "description": "Enable verbose output"
         }
       }
     },
@@ -60,5 +69,6 @@
         "title": "coc-gauge command title"
       }
     ]
+
   }
 }

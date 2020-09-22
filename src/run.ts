@@ -1,5 +1,6 @@
 import { OutputChannel, workspace } from 'coc.nvim';
 import { ChildProcessWithoutNullStreams, spawn } from 'child_process';
+import config from './config';
 
 export interface RunOption {
   specFile?: string;
@@ -22,8 +23,11 @@ export class GaugeRunner {
 
     const env = Object.create(process.env);
 
-    // TODO: --verbose option
     const args = ['run', '--simple-console'];
+    if (config.verbose) {
+      args.push('--verbose');
+    }
+
     if (debug) {
       args.push('--hide-suggestion');
       env.DEBUGGING = true;
