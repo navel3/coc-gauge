@@ -21,6 +21,8 @@ import {
   RunLastLaunchedCommand,
   DebugLastLaunchedCommand,
   RestartGaugeServiceCommand,
+  RunAllCommand,
+  DebugAllCommand,
 } from './commands';
 import config from './config';
 import { spawn } from 'child_process';
@@ -56,11 +58,13 @@ export async function activate(context: ExtensionContext): Promise<void> {
     context.subscriptions.push(commands.registerCommand(id as string, execute, cmd));
   }
 
-  registCommand(new RunScenarioAtCursorCommand(runner));
+  registCommand(new RunAllCommand(runner));
   registCommand(new RunSpecCommand(runner));
+  registCommand(new RunScenarioAtCursorCommand(runner));
   registCommand(new RunLastLaunchedCommand(runner));
-  registCommand(new DebugScenarioAtCursorCommand(runner));
+  registCommand(new DebugAllCommand(runner));
   registCommand(new DebugSpecCommand(runner));
+  registCommand(new DebugScenarioAtCursorCommand(runner));
   registCommand(new DebugLastLaunchedCommand(runner));
   registCommand(new StopCommand(runner));
   registCommand(new RenameStepCommand());

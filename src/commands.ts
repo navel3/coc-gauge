@@ -19,14 +19,13 @@ abstract class RunGaugeCommandBase {
   }
 }
 
-export class RunScenarioAtCursorCommand extends RunGaugeCommandBase {
+export class RunAllCommand extends RunGaugeCommandBase {
   constructor(runner: GaugeRunner) {
-    super('coc-gauge.runScenarioAtCursor', runner);
+    super('coc-gauge.runAll', runner);
   }
 
   async execute() {
-    const state = await workspace.getCurrentState();
-    this.run({ specFile: getCurrentFileName(), line: state.position.line });
+    this.run({});
   }
 }
 
@@ -40,14 +39,24 @@ export class RunSpecCommand extends RunGaugeCommandBase {
   }
 }
 
-export class DebugScenarioAtCursorCommand extends RunGaugeCommandBase {
+export class RunScenarioAtCursorCommand extends RunGaugeCommandBase {
   constructor(runner: GaugeRunner) {
-    super('coc-gauge.debugScenarioAtCursor', runner);
+    super('coc-gauge.runScenarioAtCursor', runner);
   }
 
   async execute() {
     const state = await workspace.getCurrentState();
-    this.run({ specFile: getCurrentFileName(), line: state.position.line, debug: true });
+    this.run({ specFile: getCurrentFileName(), line: state.position.line });
+  }
+}
+
+export class DebugAllCommand extends RunGaugeCommandBase {
+  constructor(runner: GaugeRunner) {
+    super('coc-gauge.debugAll', runner);
+  }
+
+  async execute() {
+    this.run({ debug: true });
   }
 }
 
@@ -58,6 +67,17 @@ export class DebugSpecCommand extends RunGaugeCommandBase {
 
   async execute() {
     this.run({ specFile: getCurrentFileName(), debug: true });
+  }
+}
+
+export class DebugScenarioAtCursorCommand extends RunGaugeCommandBase {
+  constructor(runner: GaugeRunner) {
+    super('coc-gauge.debugScenarioAtCursor', runner);
+  }
+
+  async execute() {
+    const state = await workspace.getCurrentState();
+    this.run({ specFile: getCurrentFileName(), line: state.position.line, debug: true });
   }
 }
 

@@ -13,7 +13,7 @@ export class GaugeRunner {
   private proc: ChildProcessWithoutNullStreams | undefined;
   constructor(private channel: OutputChannel) {}
 
-  async run({ specFile, line, debug }: RunOption = {}) {
+  async run({ specFile, line, debug }: RunOption) {
     this.channel.clear();
     this.channel.show(true);
 
