@@ -42,19 +42,19 @@ const startGaugeService = () => {
 export async function activate(context: ExtensionContext): Promise<void> {
   if (!config.enable) return;
 
+  // Start language server
   const client = startGaugeService();
   languages.registerReferencesProvider(['javascript'], new GaugeReferenceProvider(client));
   context.subscriptions.push(services.registLanguageClient(client));
 
+  // Create output channel for gauge
   const channelName = 'Gauge';
   const outputChannel = workspace.createOutputChannel(channelName);
-  await workspace.nvim.command(
-    `au BufWinEnter ${outputChannelName(
-      channelName
-    )} set syntax=markdown | setlocal nospell nofoldenable nowrap noswapfile buftype=nofile bufhidden=hide`
-  );
+
+  // Create gauge runner
   const runner = new GaugeRunner(outputChannel);
 
+  // Register commands
   function registCommand(cmd: Command): void {
     const { id, execute } = cmd;
     context.subscriptions.push(commands.registerCommand(id as string, execute, cmd));
@@ -71,4 +71,12 @@ export async function activate(context: ExtensionContext): Promise<void> {
   registCommand(new StopCommand(runner));
   registCommand(new RenameStepCommand());
   registCommand(new RestartGaugeServiceCommand(client));
+
+  // Register auto commands
+  await workspace.nvim.command('au BufEnter *.cpt set filetype=spec');
+  await workspace.nvim.command(
+    `au BufWinEnter ${outputChannelName(
+      channelName
+    )} set syntax=markdown | setlocal nospell nofoldenable nowrap noswapfile buftype=nofile bufhidden=hide`
+  );
 }
