@@ -16,6 +16,10 @@ class Config {
   get verbose(): boolean {
     return this.conf.get<boolean>('verbose', false);
   }
+
+  get autoScrollOutputWindow(): boolean {
+    return this.conf.get<boolean>('autoScrollOutputWindow', true);
+  }
 }
 
 export default new Config();

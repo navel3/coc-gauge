@@ -2,6 +2,7 @@ import { OutputChannel, workspace } from 'coc.nvim';
 import { ChildProcessWithoutNullStreams, spawn } from 'child_process';
 import config from './config';
 import { getWorkspaceFolderPath } from './util';
+import { AutoScroll } from './autoScroll';
 
 export interface RunOption {
   specFile?: string;
@@ -41,6 +42,13 @@ export class GaugeRunner {
       cwd: getWorkspaceFolderPath(),
       env,
     });
+
+    let scroll: AutoScroll;
+    if (config.autoScrollOutputWindow) {
+      scroll = new AutoScroll(this.channel);
+      scroll.start();
+    }
+
     this.proc.stdout.on(
       'data',
       this.filterStdoutDataDumpsToTextLines((lineText: string) => {
@@ -58,6 +66,9 @@ export class GaugeRunner {
     this.proc.on('exit', (code) => {
       this.channel.appendLine(`Exited: ${code}`);
       this.proc = undefined;
+      if (scroll) {
+        scroll.stop();
+      }
     });
   }
 

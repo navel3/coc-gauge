@@ -26,7 +26,7 @@ import {
 } from './commands';
 import config from './config';
 import { spawn } from 'child_process';
-import { getWorkspaceFolderPath } from './util';
+import { getWorkspaceFolderPath, outputChannelName } from './util';
 
 const startGaugeService = () => {
   const serverOptions: ServerOptions = async () =>
@@ -49,7 +49,9 @@ export async function activate(context: ExtensionContext): Promise<void> {
   const channelName = 'Gauge';
   const outputChannel = workspace.createOutputChannel(channelName);
   await workspace.nvim.command(
-    `au BufWinEnter output:///${channelName} set syntax=markdown | setlocal nospell nofoldenable nowrap noswapfile buftype=nofile bufhidden=hide`
+    `au BufWinEnter ${outputChannelName(
+      channelName
+    )} set syntax=markdown | setlocal nospell nofoldenable nowrap noswapfile buftype=nofile bufhidden=hide`
   );
   const runner = new GaugeRunner(outputChannel);
 
