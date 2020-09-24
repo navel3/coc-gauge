@@ -2,6 +2,13 @@ import { GaugeRunner, RunOption } from './run';
 import { workspace, LanguageClient } from 'coc.nvim';
 
 const getCurrentFileName = () => workspace.uri.replace(/^file:\/\/\//, '/');
+const checkSpec = async () => {
+  if ((await workspace.document).filetype !== 'spec') {
+    workspace.showMessage('Current buffer is not a spec file.', 'error');
+    return false;
+  }
+  return true;
+};
 
 export interface Command {
   readonly id: string;
@@ -35,6 +42,7 @@ export class RunSpecCommand extends RunGaugeCommandBase {
   }
 
   async execute() {
+    if (!(await checkSpec())) return;
     this.run({ specFile: getCurrentFileName() });
   }
 }
@@ -45,6 +53,7 @@ export class RunScenarioAtCursorCommand extends RunGaugeCommandBase {
   }
 
   async execute() {
+    if (!(await checkSpec())) return;
     const state = await workspace.getCurrentState();
     this.run({ specFile: getCurrentFileName(), line: state.position.line });
   }
@@ -66,6 +75,7 @@ export class DebugSpecCommand extends RunGaugeCommandBase {
   }
 
   async execute() {
+    if (!(await checkSpec())) return;
     this.run({ specFile: getCurrentFileName(), debug: true });
   }
 }
@@ -76,6 +86,7 @@ export class DebugScenarioAtCursorCommand extends RunGaugeCommandBase {
   }
 
   async execute() {
+    if (!(await checkSpec())) return;
     const state = await workspace.getCurrentState();
     this.run({ specFile: getCurrentFileName(), line: state.position.line, debug: true });
   }
@@ -115,6 +126,8 @@ export class RenameStepCommand {
   constructor() {}
 
   async execute() {
+    if (!(await checkSpec())) return;
+
     const { document, position: pos } = await workspace.getCurrentState();
     const line = await workspace.getLine(document.uri, pos.line);
     if (!line.match(/^(?:[*])([^*].*)$/)) return;
