@@ -15,33 +15,38 @@ export class GaugeRunner {
   constructor(private channel: OutputChannel) {}
 
   async run({ specFile, line, debug }: RunOption) {
-    this.channel.clear();
-    this.channel.show(true);
-
     if (this.proc) {
       workspace.showMessage('Gauge is running.', 'error');
       return;
     }
 
-    const env = Object.create(process.env);
-
     const args = ['run', '--simple-console'];
     if (config.verbose) {
       args.push('--verbose');
     }
-
     if (debug) {
       args.push('--hide-suggestion');
-      env.DEBUGGING = true;
     }
-
     if (specFile) {
       args.push(`${specFile}${line ? ':' + line.toString() : ''}`);
     }
+
     this.proc = spawn('gauge', args, {
       cwd: getWorkspaceFolderPath(),
-      env,
+      env: this.createEnv(!!debug),
     });
+    if (!this.proc.pid) {
+      this.proc.on('error', (e) => {
+        workspace.showMessage('Failed to run gauge: ' + e.message);
+      });
+      this.proc = undefined;
+      return;
+    }
+
+    // launched
+
+    this.channel.clear();
+    this.channel.show(true);
 
     let scroll: AutoScroll;
     if (config.autoScrollOutputWindow) {
@@ -77,6 +82,14 @@ export class GaugeRunner {
       this.proc.kill();
       this.proc = undefined;
     }
+  }
+
+  private createEnv(debug: boolean) {
+    const env = Object.create(process.env);
+    if (debug) {
+      env.DEBUGGING = debug;
+    }
+    return env;
   }
 
   // https://github.com/getgauge/gauge-vscode/blob/8c227a2071aed643b017eb579c0f83e2eccbf309/src/execution/gaugeExecutor.ts#L87
