@@ -47,9 +47,9 @@ export class RunSpecCommand extends RunGaugeCommandBase {
   }
 }
 
-export class RunScenarioAtCursorCommand extends RunGaugeCommandBase {
+export class RunScenarioUnderCursorCommand extends RunGaugeCommandBase {
   constructor(runner: GaugeRunner) {
-    super('coc-gauge.runScenarioAtCursor', runner);
+    super('coc-gauge.runScenarioUnderCursor', runner);
   }
 
   async execute() {
@@ -80,9 +80,9 @@ export class DebugSpecCommand extends RunGaugeCommandBase {
   }
 }
 
-export class DebugScenarioAtCursorCommand extends RunGaugeCommandBase {
+export class DebugScenarioUnderCursorCommand extends RunGaugeCommandBase {
   constructor(runner: GaugeRunner) {
-    super('coc-gauge.debugScenarioAtCursor', runner);
+    super('coc-gauge.debugScenarioUnderCursor', runner);
   }
 
   async execute() {
@@ -92,9 +92,9 @@ export class DebugScenarioAtCursorCommand extends RunGaugeCommandBase {
   }
 }
 
-export class DebugLastLaunchedCommand extends RunGaugeCommandBase {
+export class DebugRepeatCommand extends RunGaugeCommandBase {
   constructor(runner: GaugeRunner) {
-    super('coc-gauge.debugLastLaunched', runner);
+    super('coc-gauge.debugRepeat', runner);
   }
 
   async execute() {
@@ -102,9 +102,9 @@ export class DebugLastLaunchedCommand extends RunGaugeCommandBase {
   }
 }
 
-export class RunLastLaunchedCommand extends RunGaugeCommandBase {
+export class RunRepeatCommand extends RunGaugeCommandBase {
   constructor(runner: GaugeRunner) {
-    super('coc-gauge.runLastLaunched', runner);
+    super('coc-gauge.runRepeat', runner);
   }
 
   async execute() {

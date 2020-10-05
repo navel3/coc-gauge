@@ -12,14 +12,14 @@ import { GaugeReferenceProvider } from './referenceProvider';
 import { GaugeRunner } from './run';
 import { Command } from 'coc.nvim/lib/commands';
 import {
-  RunScenarioAtCursorCommand,
+  RunScenarioUnderCursorCommand,
   RunSpecCommand,
   StopCommand,
   RenameStepCommand,
-  DebugScenarioAtCursorCommand,
+  DebugScenarioUnderCursorCommand,
   DebugSpecCommand,
-  RunLastLaunchedCommand,
-  DebugLastLaunchedCommand,
+  RunRepeatCommand,
+  DebugRepeatCommand,
   RestartGaugeServiceCommand,
   RunAllCommand,
   DebugAllCommand,
@@ -54,23 +54,24 @@ export async function activate(context: ExtensionContext): Promise<void> {
   // Create gauge runner
   const runner = new GaugeRunner(outputChannel);
 
-  // Register commands
-  function registCommand(cmd: Command): void {
+  // Register commands and keymaps
+  function registCommandAndKeymap(cmd: Command, key: string): void {
     const { id, execute } = cmd;
     context.subscriptions.push(commands.registerCommand(id as string, execute, cmd));
+    workspace.registerKeymap(['n'], key, () => cmd.execute(), { sync: false });
   }
 
-  registCommand(new RunAllCommand(runner));
-  registCommand(new RunSpecCommand(runner));
-  registCommand(new RunScenarioAtCursorCommand(runner));
-  registCommand(new RunLastLaunchedCommand(runner));
-  registCommand(new DebugAllCommand(runner));
-  registCommand(new DebugSpecCommand(runner));
-  registCommand(new DebugScenarioAtCursorCommand(runner));
-  registCommand(new DebugLastLaunchedCommand(runner));
-  registCommand(new StopCommand(runner));
-  registCommand(new RenameStepCommand());
-  registCommand(new RestartGaugeServiceCommand(client));
+  registCommandAndKeymap(new RunAllCommand(runner), 'gauge-run-all');
+  registCommandAndKeymap(new RunSpecCommand(runner), 'gauge-run-spec');
+  registCommandAndKeymap(new RunScenarioUnderCursorCommand(runner), 'gauge-run-scenario-under-cursor');
+  registCommandAndKeymap(new RunRepeatCommand(runner), 'gauge-run-repeat');
+  registCommandAndKeymap(new DebugAllCommand(runner), 'gauge-debug-all');
+  registCommandAndKeymap(new DebugSpecCommand(runner), 'gauge-debug-spec');
+  registCommandAndKeymap(new DebugScenarioUnderCursorCommand(runner), 'gauge-debug-under-cursor');
+  registCommandAndKeymap(new DebugRepeatCommand(runner), 'gauge-debug-repeat');
+  registCommandAndKeymap(new StopCommand(runner), 'gauge-stop');
+  registCommandAndKeymap(new RenameStepCommand(), 'gauge-rename-step');
+  registCommandAndKeymap(new RestartGaugeServiceCommand(client), 'gauge-restart-service');
 
   // Register auto commands
   await workspace.nvim.command('au BufEnter *.cpt set filetype=spec');

@@ -2,7 +2,7 @@
   "name": "coc-gauge",
   "version": "0.0.0-development",
   "description": "",
-  "author": "navel3 <435569+navel3@users.noreply.github.com>",
+  "author": "Naoki.M <naoki.m.pub@gmail.com>",
   "license": "MIT",
   "main": "lib/index.js",
   "keywords": [
