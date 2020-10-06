@@ -70,7 +70,39 @@ name, but step name is generally separated by space characters.
 
 ## Debug
 
-[vimspector](https://github.com/puremourning/vimspector) is required to be installed for debugging.
+[vimspector](https://github.com/puremourning/vimspector) is required to be
+installed for debugging.
+
+Place the following json file as `<project-root>/.vimspector.json` for
+debugging.
+
+```json
+{
+  "configurations": {
+    "run": {
+      "adapter": "vscode-node",
+      "configuration": {
+        "request": "attach",
+        "stopOnEntry": true,
+        "protocol": "inspector",
+        "console": "integratedTerminal"
+      },
+      "breakpoints": {
+        "exception": {
+          "all": "N",
+          "caught": "",
+          "uncaught": "Y"
+        }
+      }
+    }
+  }
+}
+```
+
+The exception part is important! If you don't set the part, vimspector asks you
+some questions before attaching the session. However, Gauge wait for just 1
+second. Therefore, during the dialogue, Gauge gives up waiting for attaching
+from debugging session, then resume running without any breakpoints.
 
 ## Autocommands
 
