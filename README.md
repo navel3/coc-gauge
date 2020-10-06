@@ -4,9 +4,10 @@ Gauge language server extension for [coc-nvim](https://github.com/neoclide/coc.n
 
 [Gauge](https://gauge.org/) is a light-weight cross-platform test automation tool.
 
-**Note:** This is not an official repository by Gauge project.  
-**Note:** Some code blocks are taken from [coc-nvim](https://github.com/neoclide/coc.nvim) and [gauge-vscode](https://github.com/getgauge/gauge-vscode)
-
+**Notes:**
+- This is not an official repository by Gauge project.  
+- Some code blocks are taken from [coc-nvim](https://github.com/neoclide/coc.nvim) and [gauge-vscode](https://github.com/getgauge/gauge-vscode)
+- Currently, I'm checking only JavaScript as step implementation language, but others may works.
 
 ## Motivation
 
