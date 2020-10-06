@@ -49,7 +49,7 @@ export class GaugeRunner {
     this.channel.show(true);
 
     let scroll: AutoScroll;
-    if (config.autoScrollOutputWindow) {
+    if (config.autoScrollOutputWindow && !debug) {
       scroll = new AutoScroll(this.channel);
       scroll.start();
     }
