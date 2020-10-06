@@ -65,8 +65,8 @@ name, but step name is generally separated by space characters.
   Enable this extention.
 - coc-gauge.verbose(default: false)  
   Run gauge command with '--verbose' option.
-- coc-gauge.coc-gauge.autoScrollOutputWindow(default: true)  
-  Automatically scroll the output window to the bottom.
+- coc-gauge.coc-gauge.autoScrollOutputWindow(default: false)
+  [Experimental] Automatically scroll the output window to the bottom.
 
 ## Debug
 
