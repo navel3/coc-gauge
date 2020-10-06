@@ -7,7 +7,7 @@ Gauge language server extension for [coc-nvim](https://github.com/neoclide/coc.n
 **Notes:**
 - This is not an official repository by Gauge project.  
 - Some code blocks are taken from [coc-nvim](https://github.com/neoclide/coc.nvim) and [gauge-vscode](https://github.com/getgauge/gauge-vscode)
-- Currently, I'm checking only JavaScript as step implementation language, but others may works.
+- Currently, I'm checking only JavaScript as step implementation language, but others may work.
 
 ## Motivation
 
