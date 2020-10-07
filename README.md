@@ -26,7 +26,7 @@ The `gauge` command offers language server feature, so you can use it's featue w
 }
 ```
 
-However, it lacks many features compared to guage-vscode.  
+However, it lacks many features compared to gauge-vscode.  
 By using this extension, you can get the below features in neovim/vim!
 
 - Running tests
