@@ -108,6 +108,20 @@ from debugging session, then resume running without any breakpoints.
 
 `filetype=spec` is set on event `BufEnter *.cpt`.
 
+## Videos
+
+Run
+![run](./doc/images/run.gif)
+
+Debug
+![debug](./doc/images/debug.gif)
+
+Jump step references
+![jump](./doc/images/jumpReferences.gif)
+
+Rename step
+![rename](./doc/images/renameStep.gif)
+
 ## License
 
 MIT
