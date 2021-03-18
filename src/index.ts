@@ -7,10 +7,11 @@ import {
   LanguageClientOptions,
   languages,
   services,
+  window,
 } from 'coc.nvim';
 import { GaugeReferenceProvider } from './referenceProvider';
 import { GaugeRunner } from './run';
-import { Command } from 'coc.nvim/lib/commands';
+import { Command } from './commands';
 import {
   RunScenarioUnderCursorCommand,
   RunSpecCommand,
@@ -49,7 +50,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
 
   // Create output channel for gauge
   const channelName = 'Gauge';
-  const outputChannel = workspace.createOutputChannel(channelName);
+  const outputChannel = window.createOutputChannel(channelName);
 
   // Create gauge runner
   const runner = new GaugeRunner(outputChannel);

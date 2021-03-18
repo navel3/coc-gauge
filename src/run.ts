@@ -1,4 +1,4 @@
-import { OutputChannel, workspace } from 'coc.nvim';
+import { OutputChannel, window, workspace } from 'coc.nvim';
 import { ChildProcessWithoutNullStreams, spawn } from 'child_process';
 import config from './config';
 import { getWorkspaceFolderPath } from './util';
@@ -16,7 +16,7 @@ export class GaugeRunner {
 
   async run({ specFile, line, debug }: RunOption) {
     if (this.proc) {
-      workspace.showMessage('Gauge is running.', 'error');
+      window.showMessage('Gauge is running.', 'error');
       return;
     }
 
@@ -37,7 +37,7 @@ export class GaugeRunner {
     });
     if (!this.proc.pid) {
       this.proc.on('error', (e) => {
-        workspace.showMessage('Failed to run gauge: ' + e.message);
+        window.showMessage('Failed to run gauge: ' + e.message);
       });
       this.proc = undefined;
       return;
