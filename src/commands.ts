@@ -1,10 +1,10 @@
 import { GaugeRunner, RunOption } from './run';
-import { workspace, LanguageClient } from 'coc.nvim';
+import { window, workspace, LanguageClient } from 'coc.nvim';
 
-const getCurrentFileName = () => workspace.uri.replace(/^file:\/\/\//, '/');
+const getCurrentFileName = () => workspace.document.then((doc) => doc.uri.replace(/^file:\/\/\//, '/'));
 const checkSpec = async () => {
   if ((await workspace.document).filetype !== 'spec') {
-    workspace.showMessage('Current buffer is not a spec file.', 'error');
+    window.showMessage('Current buffer is not a spec file.', 'error');
     return false;
   }
   return true;
@@ -43,7 +43,7 @@ export class RunSpecCommand extends RunGaugeCommandBase {
 
   async execute() {
     if (!(await checkSpec())) return;
-    this.run({ specFile: getCurrentFileName() });
+    this.run({ specFile: await getCurrentFileName() });
   }
 }
 
@@ -55,7 +55,7 @@ export class RunScenarioUnderCursorCommand extends RunGaugeCommandBase {
   async execute() {
     if (!(await checkSpec())) return;
     const state = await workspace.getCurrentState();
-    this.run({ specFile: getCurrentFileName(), line: state.position.line });
+    this.run({ specFile: await getCurrentFileName(), line: state.position.line });
   }
 }
 
@@ -76,7 +76,7 @@ export class DebugSpecCommand extends RunGaugeCommandBase {
 
   async execute() {
     if (!(await checkSpec())) return;
-    this.run({ specFile: getCurrentFileName(), debug: true });
+    this.run({ specFile: await getCurrentFileName(), debug: true });
   }
 }
 
@@ -88,7 +88,7 @@ export class DebugScenarioUnderCursorCommand extends RunGaugeCommandBase {
   async execute() {
     if (!(await checkSpec())) return;
     const state = await workspace.getCurrentState();
-    this.run({ specFile: getCurrentFileName(), line: state.position.line, debug: true });
+    this.run({ specFile: await getCurrentFileName(), line: state.position.line, debug: true });
   }
 }
 
@@ -152,7 +152,7 @@ export class RenameStepCommand {
     const newName = await workspace.callAsync<string>('input', ['New name: ', curname]);
     workspace.nvim.command('normal! :<C-u>', true);
     if (!newName) {
-      workspace.showMessage('Empty name, canceled', 'warning');
+      window.showMessage('Empty name, canceled', 'warning');
       return;
     }
     if (newName !== curname) {
@@ -167,7 +167,7 @@ export class RestartGaugeServiceCommand {
 
   async execute() {
     this.client.stop().then(() => {
-      workspace.showMessage('Restarted Gauge Service');
+      window.showMessage('Restarted Gauge Service');
       this.client.restart();
     });
   }
